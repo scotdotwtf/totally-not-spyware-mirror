@@ -1,33 +1,23 @@
-# TotallyNotSpyware
+# Webroot
 
-This program is definitely not spyware.  
-Run it on your 64-bit iOS device as soon as possible.  
-Your compliance will be rewarded.
+This is the final product, complete with exploit, payload and everything.
 
-[**[ Live version at totally-not.spyware.lol ]**](https://totally-not.spyware.lol)
+### Setting up a build environment
 
-### Repo structure & building
+You'll need some of Google's closure tools. You can download the CSS compiler from [here](https://github.com/google/closure-stylesheets/releases) and the JS one from [here](https://github.com/google/closure-compiler/wiki/Binary-Downloads). Put them wherever you like, then set up two bash scripts somewhere in `PATH` like this:
 
-Frontend and WebKit exploit are in `/root`.  
-Kernel exploit is in `/glue`.  
-Post-exploitation is in `/glue/dep`.
+`closure-css`:
 
-DoubleH3lix and Meridian can be built independently into static libraries with `make headless` and `make all` respectively, in their directories.  
-Those are then used to build the `payload` in `/glue`, which is the binary that is ran from JIT after the WebKit exploit. Can be built with just a `make`, and will build all dependencies as needed.  
-And that is all finally strung together with the WebKit exploit by running `make` in `/root`, which will again build dependencies as needed.
+    #!/bin/bash
 
-### Patch
+    java -jar path/to/closure-stylesheets-*.jar "$@";
 
-We originally wanted to backport the WebKit patch to 10.x, but ultimately gave up.  
+`closure-js`:
 
-See `/patch` for details, but the gist is:  
-One part of the WebKit bug was incorrect predictions in `JSC::DFG::clobberize`, which is basically a huge switch-case. The fix for that was to re-route some values to blocks that are already used for other values.  
-On the versions we checked, the compiler had generated jump tables for that, so our idea would've been to just find and patch all those jump tables, since the correct code would already be present.  
-The issue is that the values that everything depends on have changed hundreds of times over the lifetime of iOS 10 (yes, much more frequently than there have been iOS releases), and there seem to be no landmarks anywhere nearby in code, so it's virtually impossible for us to determine which values to patch. :(
+    #!/bin/bash
 
-### Credits
+    java -jar path/to/closure-compiler-*.jar "$@";
 
-- The final ~~countdown~~ product: [Jake Blair](https://twitter.com/JakeBlair420)
-- The entire frontend, website, etc.: [FoxletFox](https://twitter.com/FoxletFox)
-- WebKit exploit: [Niklas Baumstark](https://twitter.com/_niklasb/), with part of [Samuel Groß](https://twitter.com/5aelo/)' code patched in.
-- Everyone credited for the [DoubleH3lix](https://github.com/Siguza/doubleH3lix) and [Meridian](https://github.com/PsychoTea/MeridianJB) jailbreaks.
+### Building
+
+`make -C ../glue && make`
