@@ -1,3 +1,6 @@
+# http://scot.wtf/totally-not-spyware-mirror/
+Archive of totally.not.spyware.lol's page without version locking for all of your larping needs! lol.
+
 # Webroot
 
 This is the final product, complete with exploit, payload and everything.
